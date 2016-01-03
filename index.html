@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Socket.IO chat</title>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script>
+			var socket = io();
+			socket.on('matched', function() {
+				console.log('Matched with opponent.');
+			});
+
+			socket.on('opponent-disconnected', function() {
+				console.log('Opponent disconnected.');
+			});
+
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
