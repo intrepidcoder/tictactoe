@@ -1,4 +1,5 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
@@ -6,9 +7,7 @@ app.get('/', function(request, response) {
 	response.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/tictactoe.js', function(request, response) {
-	response.sendFile(__dirname + '/public/tictactoe.js');
-});
+app.use(express.static('public'));
 
 var unpairedSocket, needsPair = false;
 var gameIndex = 0;

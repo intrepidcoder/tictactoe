@@ -1,0 +1,68 @@
+body {
+    margin: 0px;
+}
+
+#content {
+    width: 95%;
+    /*background-color: gray;*/
+    margin: auto;
+}
+
+#board {
+    width: 100%;
+    height: 95vw;
+    max-width: 500px;
+    max-height: 500px;
+    background-color: gold;
+    margin: auto;
+}
+
+.tile {
+    width: 30%;
+    height: 30%;
+    /*margin: 2.5% 0% 0% 2.5%;*/
+    margin: 0%;
+    float: left;
+    /*background-color: white;*/
+    font-size: 100%;
+    /*background-image: url('images/o.svg');*/
+    background-size: 100%;
+}
+
+.divider {
+    background-color: black;
+    float: left;
+}
+
+.top-divider {
+    width: 5%;
+    height: 30%;
+    border-top-right-radius: 50% 8.333%;
+    border-top-left-radius: 50% 8.333%;
+}
+
+.bottom-divider {
+    width: 5%;
+    height: 30%;
+    border-bottom-right-radius: 50% 8.333%;
+    border-bottom-left-radius: 50% 8.333%;
+}
+
+.vertical-divider {
+    width: 5%;
+    height: 30%;
+}
+
+.horizontal-divider {
+    width: 100%;
+    height: 5%;
+    border-top-right-radius: 2.5% 50%;
+    border-top-left-radius: 2.5% 50%;
+    border-bottom-right-radius: 2.5% 50%;
+    border-bottom-left-radius: 2.5% 50%;
+}
+
+.tile-image {
+    width: 100%;
+    height: 100%;
+}
