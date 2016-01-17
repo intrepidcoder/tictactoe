@@ -30,6 +30,14 @@ io.on('connection', function(socket) {
 		}
 	});
 
+	socket.on('move', function() {
+		var game = games[socket.gameId];
+		game.turn++;
+		game.turn %= 2;
+
+		io.to(game.players[game.turn].socket.id).emit('start-turn');
+	});
+
 	socket.on('play-again', function() {
 		console.log('user reconnected');
 		addPlayer(socket);
@@ -50,8 +58,9 @@ var addPlayer = function(socket) {
 		needsPair = false;
 
 
-		games[gameId] = {};
+		games[gameId] = {'players':[{'socket': unpairedSocket}, {'socket': socket}], 'turn': 0};
 		io.to(socket.gameId).emit('matched');
+		io.to(unpairedSocket.id).emit('start-turn');
 	} else {
 		socket.paired = false;
 		unpairedSocket = socket;

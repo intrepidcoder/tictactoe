@@ -1,8 +1,8 @@
 $(document).ready(function() {
 	var socket = io();
 
-	$('#reconnect').prop({'disabled':true});
-	console.log('Waiting for opponant.');
+	$('#reconnect, #move').prop({'disabled':true});
+	console.log('Waiting for opponent.');
 
 	socket.on('matched', function() {
 		console.log('Matched with opponent.');
@@ -14,10 +14,20 @@ $(document).ready(function() {
 		$('#reconnect').prop({'disabled':false});
 	});
 
+	socket.on('start-turn', function() {
+		console.log('Your turn.');
+		$('#move').prop({'disabled':false});
+	});
+
 	$('#reconnect').click(function() {
 		socket.emit('play-again');
-		console.log('Waiting for opponant.');
+		console.log('Waiting for opponent.');
 		$('#reconnect').prop({'disabled':true});
 	});
 
+	$('#move').click(function() {
+		socket.emit('move');
+		console.log('Waiting for opponent\'s move.');
+		$('#move').prop({'disabled':true});
+	});
 });
