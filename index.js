@@ -29,12 +29,15 @@ io.on('connection', function(socket) {
 		}
 	});
 
-	socket.on('move', function() {
+	socket.on('move', function(index) {
 		var game = games[socket.gameId];
-		game.turn++;
-		game.turn %= 2;
 
-		io.to(game.players[game.turn].socket.id).emit('start-turn');
+		if (game.players[game.turn].socket.id == socket.id) {
+			game.turn++;
+			game.turn %= 2;
+
+			io.to(game.players[game.turn].socket.id).emit('opponent-moved', index);
+		}
 	});
 
 	socket.on('play-again', function() {
@@ -57,9 +60,9 @@ var addPlayer = function(socket) {
 		needsPair = false;
 
 
-		games[gameId] = {'players':[{'socket': unpairedSocket}, {'socket': socket}], 'turn': 0};
+		games[gameId] = {'players':[{'socket': unpairedSocket, 'id': unpairedSocket.id}, {'socket': socket, 'id': socket.id}], 'turn': 0};
 		io.to(socket.gameId).emit('matched');
-		io.to(unpairedSocket.id).emit('start-turn');
+		io.to(unpairedSocket.id).emit('start-game');
 	} else {
 		socket.paired = false;
 		unpairedSocket = socket;
