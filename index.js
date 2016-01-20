@@ -14,7 +14,6 @@ var gameIndex = 0;
 var games = {};
 
 io.on('connection', function(socket) {
-	console.log('user connected');
 	addPlayer(socket);
 
 	socket.on('disconnect', function() {
@@ -23,7 +22,6 @@ io.on('connection', function(socket) {
 			delete games[socket.gameId];
 		}
 
-		console.log('user disconnected');
 		if (socket === unpairedSocket) {
 			needsPair = false;
 		}
@@ -31,17 +29,18 @@ io.on('connection', function(socket) {
 
 	socket.on('move', function(index) {
 		var game = games[socket.gameId];
+		index = parseInt(index, 10);
 
-		if (game.players[game.turn].socket.id == socket.id) {
+		if (typeof index === 'number' && 0 <= index && index < 10 && game.players[game.turn].socket.id === socket.id && !game.filled[index]) {
 			game.turn++;
 			game.turn %= 2;
+			game.filled[index] = true;
 
 			io.to(game.players[game.turn].socket.id).emit('opponent-moved', index);
 		}
 	});
 
 	socket.on('play-again', function() {
-		console.log('user reconnected');
 		addPlayer(socket);
 	});
 });
@@ -60,7 +59,7 @@ var addPlayer = function(socket) {
 		needsPair = false;
 
 
-		games[gameId] = {'players':[{'socket': unpairedSocket, 'id': unpairedSocket.id}, {'socket': socket, 'id': socket.id}], 'turn': 0};
+		games[gameId] = {'players':[{'socket': unpairedSocket, 'id': unpairedSocket.id}, {'socket': socket, 'id': socket.id}], 'turn': 0, 'filled': []};
 		io.to(socket.gameId).emit('matched');
 		io.to(unpairedSocket.id).emit('start-game');
 	} else {

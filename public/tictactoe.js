@@ -23,7 +23,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('opponent-moved', function(index) {
-		console.log('Your turn.');
+		console.log('Your turn.', index);
 		canMove = true;
 		$('#tile' + index).addClass(playAs == 'x' ? 'naught' : 'cross').empty();
 	});
@@ -40,6 +40,7 @@ $(document).ready(function() {
 	// 	$('#move').prop({'disabled':true});
 	// });
 
+	// Wrap click event handler for tile in closure to store index
 	var makeTileClickHandler = function(index) {
 		return function(event) {
 			if (canMove) {
