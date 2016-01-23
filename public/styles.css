@@ -4,8 +4,9 @@ body {
 }
 
 #content {
-    width: 95%;
+    width: 100%;
     margin: auto;
+    position: absolute;
 }
 
 #board {
@@ -13,7 +14,6 @@ body {
     height: 95vw;
     max-width: 500px;
     max-height: 500px;
-    /*background-color: gold;*/
     margin: auto;
 }
 
@@ -23,8 +23,6 @@ body {
     margin: 0%;
     float: left;
     font-size: 100%;
-    /*background-image: url('images/o.svg');
-    background-size: 100%;*/
 }
 
 .divider {
@@ -66,8 +64,6 @@ body {
 }
 
 .empty-tile {
-    width: 100%;
-    height: 100%;
     cursor: pointer;
 }
 
@@ -82,3 +78,22 @@ body {
     background-image: url('images/x.svg');
     background-size: 100%;
 }
+
+/*
+#game-over {
+    position: absolute;
+    font-family: sans serif;
+    text-align: center;
+    font-weight: bold;
+    background-color: white;
+    z-index: 1;
+    margin: auto;
+    position: absolute;
+    top: 40%;
+    left: 7.25%;
+    right: 7.25%;
+    max-width: 450px;
+    width: 85.5%;
+    font-size: 5em;
+}
+*/
