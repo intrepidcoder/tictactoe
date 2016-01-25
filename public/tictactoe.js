@@ -51,9 +51,9 @@ $(document).ready(function() {
 
 	var checkGameOver = function() {
 		var positions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
-		var filledCount = 0, winner = '';
+		var i, filledCount = 0, winner = '';
 
-		for (var i = 0; i < positions.length; i++) {
+		for (i = 0; i < positions.length; i++) {
 			if (typeof board[positions[i][0]] !== 'undefined' && board[positions[i][0]] === board[positions[i][1]] && board[positions[i][1]] === board[positions[i][2]]) {
 				winner = board[positions[i][0]];
 				$('#tile' + positions[i][0]).addClass('three-in-a-row');
@@ -70,7 +70,7 @@ $(document).ready(function() {
 			$('.tile').filter(':not(.three-in-a-row)').animate({'opacity': 0.3}, 2000);
 		} else {
 
-			for (var i = 0; i < board.length; i++) {
+			for (i = 0; i < board.length; i++) {
 				if (board[i]) filledCount++;
 			}
 
