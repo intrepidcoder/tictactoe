@@ -3,10 +3,24 @@ body {
     background-color: #FAF8EF;
 }
 
+#header {
+    width: 500px;
+    margin: auto;
+    font-family: Helvetica,Arial,nimbussansl,liberationsans,freesans,clean,sans-serif;
+    height: 40px;
+}
+
+#message {
+    float: left;
+    height: 40px;
+    width: 300px;
+    line-height: 40px;
+    font-size: 25px;
+}
+
 #content {
     width: 100%;
-    margin: auto;
-    position: absolute;
+    margin: 20px auto;
 }
 
 #board {
@@ -14,7 +28,8 @@ body {
     height: 95vw;
     max-width: 500px;
     max-height: 500px;
-    margin: auto;
+    margin: 20px auto;
+    clear: both;
 }
 
 .tile {
@@ -78,22 +93,3 @@ body {
     background-image: url('images/x.svg');
     background-size: 100%;
 }
-
-/*
-#game-over {
-    position: absolute;
-    font-family: sans serif;
-    text-align: center;
-    font-weight: bold;
-    background-color: white;
-    z-index: 1;
-    margin: auto;
-    position: absolute;
-    top: 40%;
-    left: 7.25%;
-    right: 7.25%;
-    max-width: 450px;
-    width: 85.5%;
-    font-size: 5em;
-}
-*/

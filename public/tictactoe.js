@@ -3,37 +3,37 @@ $(document).ready(function() {
 	var canMove = false, playAs = 'o', board = [];
 
 
+	var addMessage = function(messageText) {
+		$('#message').animate({'opacity': 0.0}, 'slow', function() {
+			$(this).text(messageText).animate({'opacity': 1.0}, 'slow');
+		});
+	};
+
 	$('#reconnect, #move').prop({'disabled':true});
-	console.log('Waiting for opponent.');
+	addMessage('Waiting for opponent');
 
 	socket.on('matched', function() {
-		console.log('Matched with opponent.');
+		addMessage('Opponent\'s turn');
 		$('#reconnect').prop({'disabled':true});
 	});
 
 	socket.on('opponent-disconnected', function() {
-		console.log('Opponent disconnected.');
+		addMessage('Opponent disconnected');
 		$('#reconnect').prop({'disabled':false});
 	});
 
 	socket.on('start-game', function() {
-		console.log('Your turn.');
+		addMessage('Your turn');
 		canMove = true;
 		playAs = 'x';
 	});
 
 	socket.on('opponent-moved', function(index) {
-		console.log('Your turn.', index);
+		addMessage('Your turn');
 		canMove = true;
 		$('#tile' + index).removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		board[index] = playAs == 'x' ? 'o' : 'x';
 		checkGameOver();
-	});
-
-	$('#reconnect').click(function() {
-		socket.emit('play-again');
-		console.log('Waiting for opponent.');
-		$('#reconnect').prop({'disabled':true});
 	});
 
 	// Wrap click event handler for tile in closure to store index
@@ -41,7 +41,7 @@ $(document).ready(function() {
 		return function(event) {
 			if (canMove) {
 				socket.emit('move', index);
-				console.log('Waiting for opponent\'s move.', index);
+				addMessage('Opponent\'s turn', index);
 				$(this).removeClass('empty-tile').addClass(playAs == 'o' ? 'naught' : 'cross');
 				board[index] = playAs;
 				canMove = false;
@@ -62,9 +62,7 @@ $(document).ready(function() {
 		}
 
 		if (winner) {
-			// $gameOver = $('<div>').attr({'id': 'game-over'}).text(winner === playAs ? 'You won!' : 'You lost.');
-			// $('#board').animate({'opacity': 0.5}); //.append($gameOver);
-			console.log(winner === playAs ? 'You won!' : 'You lost.');
+			addMessage(winner === playAs ? 'You won!' : 'You lost');
 			canMove = false;
 		} else {
 
@@ -73,7 +71,7 @@ $(document).ready(function() {
 			}
 
 			if (filledCount >= 9) {
-				console.log('Tie');
+				addMessage('Tie');
 				canMove = false;
 			}
 		}
