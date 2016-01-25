@@ -3,8 +3,7 @@ $(document).ready(function() {
 	var canMove = false, playAs = 'o', board = [];
 
 	socket.on('matched', function() {
-		addMessage('Opponent\'s turn');
-		$('#reconnect').prop({'disabled':true});
+		addMessage('Opponent\'s turn (x)');
 	});
 
 	socket.on('opponent-disconnected', function() {
@@ -13,13 +12,13 @@ $(document).ready(function() {
 	});
 
 	socket.on('start-game', function() {
-		addMessage('Your turn');
-		canMove = true;
 		playAs = 'x';
+		addMessage('Your turn (x)');
+		canMove = true;
 	});
 
 	socket.on('opponent-moved', function(index) {
-		addMessage('Your turn');
+		addMessage('Your turn (' + playAs + ')');
 		canMove = true;
 		$('#tile' + index).removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		board[index] = playAs == 'x' ? 'o' : 'x';
@@ -28,7 +27,7 @@ $(document).ready(function() {
 
 	$('#play-again').click(function() {
 		socket.emit('play-again');
-		$('.tile').addClass('empty-tile').removeClass('naught cross');
+		$('.tile').addClass('empty-tile').removeClass('naught cross three-in-a-row').css({'opacity': 1.0});
 		$(this).hide();
 		addMessage('Waiting for opponent');
 		playAs = 'o';
@@ -41,7 +40,7 @@ $(document).ready(function() {
 		return function(event) {
 			if (canMove) {
 				socket.emit('move', index);
-				addMessage('Opponent\'s turn', index);
+				addMessage('Opponent\'s turn (' + (playAs === 'x' ? 'o' : 'x') + ')', index);
 				$(this).removeClass('empty-tile').addClass(playAs == 'o' ? 'naught' : 'cross');
 				board[index] = playAs;
 				canMove = false;
@@ -57,6 +56,9 @@ $(document).ready(function() {
 		for (var i = 0; i < positions.length; i++) {
 			if (typeof board[positions[i][0]] !== 'undefined' && board[positions[i][0]] === board[positions[i][1]] && board[positions[i][1]] === board[positions[i][2]]) {
 				winner = board[positions[i][0]];
+				$('#tile' + positions[i][0]).addClass('three-in-a-row');
+				$('#tile' + positions[i][1]).addClass('three-in-a-row');
+				$('#tile' + positions[i][2]).addClass('three-in-a-row');
 				break;
 			}
 		}
@@ -65,6 +67,7 @@ $(document).ready(function() {
 			addMessage(winner === playAs ? 'You won!' : 'You lost');
 			canMove = false;
 			$('#play-again').show();
+			$('.tile').filter(':not(.three-in-a-row)').animate({'opacity': 0.3}, 2000);
 		} else {
 
 			for (var i = 0; i < board.length; i++) {
