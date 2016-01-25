@@ -19,13 +19,15 @@ io.on('connection', function(socket) {
 	socket.on('disconnect', function() {
 		if (socket.paired) {
 			io.to(socket.gameId).emit('opponent-disconnected');
+			games[socket.gameId].players[0].socket.paired = false;
+			games[socket.gameId].players[1].socket.paired = false;
 			delete games[socket.gameId];
 			delete socket.gameId;
-			socket.paired = false;
 		}
 
 		if (socket === unpairedSocket) {
 			needsPair = false;
+			socket.paired = false;
 		}
 	});
 

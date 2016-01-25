@@ -2,16 +2,6 @@ $(document).ready(function() {
 	var socket = io();
 	var canMove = false, playAs = 'o', board = [];
 
-
-	var addMessage = function(messageText) {
-		$('#message').animate({'opacity': 0.0}, 'slow', function() {
-			$(this).text(messageText).animate({'opacity': 1.0}, 'slow');
-		});
-	};
-
-	$('#reconnect, #move').prop({'disabled':true});
-	addMessage('Waiting for opponent');
-
 	socket.on('matched', function() {
 		addMessage('Opponent\'s turn');
 		$('#reconnect').prop({'disabled':true});
@@ -19,7 +9,7 @@ $(document).ready(function() {
 
 	socket.on('opponent-disconnected', function() {
 		addMessage('Opponent disconnected');
-		$('#reconnect').prop({'disabled':false});
+		$('#play-again').show();
 	});
 
 	socket.on('start-game', function() {
@@ -34,6 +24,16 @@ $(document).ready(function() {
 		$('#tile' + index).removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		board[index] = playAs == 'x' ? 'o' : 'x';
 		checkGameOver();
+	});
+
+	$('#play-again').click(function() {
+		socket.emit('play-again');
+		$('.tile').addClass('empty-tile').removeClass('naught cross');
+		$(this).hide();
+		addMessage('Waiting for opponent');
+		playAs = 'o';
+		canMove = false;
+		board = [];
 	});
 
 	// Wrap click event handler for tile in closure to store index
@@ -64,6 +64,7 @@ $(document).ready(function() {
 		if (winner) {
 			addMessage(winner === playAs ? 'You won!' : 'You lost');
 			canMove = false;
+			$('#play-again').show();
 		} else {
 
 			for (var i = 0; i < board.length; i++) {
@@ -73,9 +74,18 @@ $(document).ready(function() {
 			if (filledCount >= 9) {
 				addMessage('Tie');
 				canMove = false;
+				$('#play-again').show();
 			}
 		}
 	};
+
+	var addMessage = function(messageText) {
+		$('#message').animate({'opacity': 0.0}, 'slow', function() {
+			$(this).text(messageText).animate({'opacity': 1.0}, 'slow');
+		});
+	};
+
+	addMessage('Waiting for opponent');
 
 	// Add click events and ids to each tile.
 	$('.tile').each(function(index) {

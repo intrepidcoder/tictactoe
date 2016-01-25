@@ -18,6 +18,21 @@ body {
     font-size: 25px;
 }
 
+#play-again {
+    background-color: #006FFF;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: white;
+    border-radius: 10px;
+    font-size: 20px;
+    float: right;
+    width: 200px;
+}
+
 #content {
     width: 100%;
     margin: 20px auto;
