@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Tic-Tac-Toe</title>
+		<link rel="stylesheet" href="styles.css" charset="utf-8">
+		<link rel="stylesheet" media="screen and (max-width: 520px)" href="small.css" charset="utf-8">
+		<link rel="stylesheet" media="screen and (min-width: 520px)" href="large.css" charset="utf-8">
+		<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="tictactoe.js"></script>
+	</head>
+	<body>
+		<div id="content">
+			<div id="header">
+				<div id="message">Loading...</div>
+				<div id="play-again">Play again</div>
+			</div>
+			<div id="board">
+				<div class="tile"></div>
+				<div class="divider top-divider"></div>
+				<div class="tile"></div>
+				<div class="divider top-divider"></div>
+				<div class="tile"></div>
+				<div class="divider horizontal-divider"></div>
+				<div class="tile"></div>
+				<div class="divider vertical-divider"></div>
+				<div class="tile"></div>
+				<div class="divider vertical-divider"></div>
+				<div class="tile"></div>
+				<div class="divider horizontal-divider"></div>
+				<div class="tile"></div>
+				<div class="divider bottom-divider"></div>
+				<div class="tile"></div>
+				<div class="divider bottom-divider"></div>
+				<div class="tile"></div>
+			</div>
+		</div>
+	</body>
+</html>

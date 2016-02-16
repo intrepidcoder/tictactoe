@@ -1,0 +1,31 @@
+#header {
+    height: 30px;
+    margin: 5px auto;
+    width: 280px;
+}
+
+#message {
+    font-size: 15px;
+    height: 30px;
+    line-height: 30px;
+    width: 180px;
+}
+
+#play-again {
+    border-radius: 5px;
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    width: 100px;
+}
+
+#content {
+    margin: 10px auto;
+    width: 300px;
+}
+
+#board {
+    height: 280px;
+    margin: 10px;
+    width: 280px;
+}
