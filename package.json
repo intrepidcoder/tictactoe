@@ -4,9 +4,13 @@
   "description": "Simple tic-tac-toe game",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Daniel Moyer",
+  "author": {
+      "name": "Daniel Moyer",
+      "url": "http://www.intrepidcoder.com"
+  },
   "dependencies": {
     "express": "^4.13.3",
     "socket.io": "^1.3.7"

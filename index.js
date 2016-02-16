@@ -105,6 +105,9 @@ var isFinished = function(filled) {
 	return filledCount >= 9;
 };
 
-http.listen(3000, function() {
-	console.log('Listening on *:3000');
+var SERVER_PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080,
+SERVER_IP = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
+
+http.listen(SERVER_PORT, SERVER_IP, function() {
+	console.log('Listening on ' + SERVER_PORT + ':' + SERVER_IP);
 });
