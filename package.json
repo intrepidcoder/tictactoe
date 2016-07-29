@@ -1,7 +1,8 @@
 {
   "name": "tictactoe",
   "version": "0.1.0",
-  "description": "Simple tic-tac-toe game",
+  "description": "A two-player Tic-Tac-Toe game over the web using Socket.io",
+  "homepage": "http://tictactoe.intrepidcoder.com",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -10,7 +11,8 @@
   "license": "MIT",
   "author": {
       "name": "Daniel Moyer",
-      "url": "http://www.intrepidcoder.com"
+      "url": "http://www.intrepidcoder.com",
+      "email": "daniel@intrepidcoder.com"
   },
   "dependencies": {
     "express": "^4.13.3",
