@@ -18,32 +18,32 @@ $(document).ready(function() {
 	});
 
 	socket.on('opponent-moved', function(index) {
+		$('#tile' + index).off('click').removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		addMessage('Your turn (' + playAs + ')');
-		canMove = true;
-		$('#tile' + index).removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		board[index] = playAs == 'x' ? 'o' : 'x';
 		checkGameOver();
+		canMove = true;
 	});
 
 	$('#play-again').click(function() {
+		canMove = false;
 		socket.emit('play-again');
 		$('.tile').addClass('empty-tile').removeClass('naught cross three-in-a-row').css({'opacity': 1.0});
 		$(this).hide();
 		addMessage('Waiting for opponent');
 		playAs = 'o';
-		canMove = false;
 		board = [];
 	});
 
 	// Wrap click event handler for tile in closure to store index
 	var makeTileClickHandler = function(index) {
 		return function(event) {
-			if (canMove) {
+			if (canMove && !board[index]) {
+				canMove = false;
 				socket.emit('move', index);
 				addMessage('Opponent\'s turn (' + (playAs === 'x' ? 'o' : 'x') + ')', index);
 				$(this).removeClass('empty-tile').addClass(playAs == 'o' ? 'naught' : 'cross');
 				board[index] = playAs;
-				canMove = false;
 				checkGameOver();
 			}
 		};
@@ -64,8 +64,8 @@ $(document).ready(function() {
 		}
 
 		if (winner) {
-			addMessage(winner === playAs ? 'You won!' : 'You lost');
 			canMove = false;
+			addMessage(winner === playAs ? 'You won!' : 'You lost');
 			$('#play-again').show();
 			$('.tile').filter(':not(.three-in-a-row)').animate({'opacity': 0.3}, 2000);
 		} else {
@@ -75,8 +75,8 @@ $(document).ready(function() {
 			}
 
 			if (filledCount >= 9) {
-				addMessage('Tie');
 				canMove = false;
+				addMessage('Tie');
 				$('#play-again').show();
 			}
 		}
