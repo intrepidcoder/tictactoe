@@ -25,6 +25,12 @@ body {
     clear: both;
 }
 
+@media (min-device-width: 800px) {
+    #fork {
+        display: block !important;
+    }
+}
+
 .tile {
     float: left;
     font-size: 100%;
