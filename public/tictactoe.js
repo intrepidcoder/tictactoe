@@ -18,7 +18,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('opponent-moved', function(index) {
-		$('#tile' + index).off('click').removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
+		$('#tile' + index).removeClass('empty-tile').addClass(playAs == 'x' ? 'naught' : 'cross');
 		addMessage('Your turn (' + playAs + ')');
 		board[index] = playAs == 'x' ? 'o' : 'x';
 		checkGameOver();
