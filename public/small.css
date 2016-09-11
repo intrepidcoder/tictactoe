@@ -29,3 +29,18 @@
     margin: 10px;
     width: 280px;
 }
+
+#pin-container {
+    font-size: 13px;
+    margin: auto;
+    width: 280px;
+}
+
+#game-pin {
+    margin-bottom: 10px;
+}
+
+#pin-submit {
+    display: block;
+    width: 280px;
+}

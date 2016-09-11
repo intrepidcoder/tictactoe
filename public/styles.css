@@ -1,9 +1,6 @@
 body {
     background-color: #FAF8EF;
     margin: 0px;
-}
-
-#header {
     font-family: Helvetica,Arial,nimbussansl,liberationsans,freesans,clean,sans-serif;
 }
 
@@ -86,4 +83,26 @@ body {
     background-image: url('images/x.svg');
     background-size: 100%;
     cursor: default;
+}
+
+#game-pin {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 20px;
+    height: 36px;
+    margin: 0 10px 10px 0;
+    position: relative;
+    text-align: center;
+    width: 280px;
+}
+
+#pin-submit {
+    background-color: #333;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    height: 36px;
+    margin: auto;
 }

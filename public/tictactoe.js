@@ -6,15 +6,26 @@ $(document).ready(function() {
 		addMessage('Opponent\'s turn (x)');
 	});
 
+	socket.on('pin', function(pin) {
+		$('#player-pin').text('Your PIN is ' + pin + '. Enter your opponent\'s PIN to play.');
+	});
+
 	socket.on('opponent-disconnected', function() {
 		addMessage('Opponent disconnected');
 		$('#play-again').show();
 	});
 
-	socket.on('start-game', function() {
-		playAs = 'x';
-		addMessage('Your turn (x)');
-		canMove = true;
+	socket.on('start-game', function(playAsIndex) {
+		$('#pin-container').slideUp();
+		if (playAsIndex === 0) {
+			playAs = 'x';
+			canMove = true;
+			addMessage('Your turn (x)');
+		} else if (playAsIndex === 1) {
+			playAs = 'o';
+			canMove = false;
+			addMessage('Opponent\'s turn (x)');
+		}
 	});
 
 	socket.on('opponent-moved', function(index) {
@@ -30,7 +41,8 @@ $(document).ready(function() {
 		socket.emit('play-again');
 		$('.tile').addClass('empty-tile').removeClass('naught cross three-in-a-row').css({'opacity': 1.0});
 		$(this).hide();
-		addMessage('Waiting for opponent');
+		$('#game-pin').val('');
+		$('#pin-container').slideDown();
 		playAs = 'o';
 		board = [];
 	});
@@ -82,13 +94,40 @@ $(document).ready(function() {
 		}
 	};
 
+	$('#pin-form').on('submit', function(e) {
+		var $gamePin = $('#game-pin');
+		$gamePin.css({color: ''});
+		e.preventDefault();
+		var pin = parseInt($('#game-pin').val());
+		if (!isNaN(pin) && pin >= 0) {
+			socket.emit('enter-pin', pin);
+		} else {
+			var distance = 5, duration = 50;
+			$gamePin.css({color: 'red'});
+			for (var i = 0; i < 2; i++) {
+				$gamePin.animate({left: -distance}, duration);
+				$gamePin.animate({left: distance * 2}, duration * 2);
+				$gamePin.animate({left: 0}, duration);
+			}
+		}
+	});
+
+	socket.on('invalid-pin', function() {
+		var $gamePin = $('#game-pin');
+		var distance = 5, duration = 50;
+		$gamePin.css({color: 'red'});
+		for (var i = 0; i < 2; i++) {
+			$gamePin.animate({left: -distance}, duration);
+			$gamePin.animate({left: distance * 2}, duration * 2);
+			$gamePin.animate({left: 0}, duration);
+		}
+	});
+
 	var addMessage = function(messageText) {
 		$('#message').animate({'opacity': 0.0}, 'slow', function() {
 			$(this).text(messageText).animate({'opacity': 1.0}, 'slow');
 		});
 	};
-
-	addMessage('Waiting for opponent');
 
 	// Add click events and ids to each tile.
 	$('.tile').each(function(index) {
@@ -96,4 +135,7 @@ $(document).ready(function() {
 			.attr('id', 'tile' + index)
 			.addClass('empty-tile');
 	});
+
+	$('#game-pin').val('');
+	addMessage('Ready');
 });

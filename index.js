@@ -3,7 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var unpairedSocket, needsPair = false, gameIndex = 0, games = {};
+var gameIndex = 0, games = {};
+var unpairedPins = [], maxPin = 10000, pinCount = 0;
 
 app.get('/', function(request, response) {
 	response.sendFile(__dirname + '/public/index.html');
@@ -21,11 +22,6 @@ io.on('connection', function(socket) {
 			games[socket.gameId].players[1].socket.paired = false;
 			delete games[socket.gameId];
 			delete socket.gameId;
-		}
-
-		if (socket === unpairedSocket) {
-			needsPair = false;
-			socket.paired = false;
 		}
 	});
 
@@ -55,36 +51,53 @@ io.on('connection', function(socket) {
 			addPlayer(socket);
 		}
 	});
+
+	socket.on('enter-pin', function(opponentPin) {
+		if (!socket.paired && typeof unpairedPins[opponentPin] === 'object' && opponentPin != socket.pin && unpairedPins[opponentPin].pin === opponentPin && typeof socket.pin === 'number') {
+			pairPlayers(socket, unpairedPins[opponentPin]);
+		} else {
+			socket.emit('invalid-pin');
+		}
+	});
 });
 
 var addPlayer = function(socket) {
-	if (needsPair && socket !== unpairedSocket) {
+	socket.pin = generatePin();
+	unpairedPins[socket.pin] = socket;
+	pinCount++;
+	socket.emit('pin', socket.pin);
+};
+
+var pairPlayers = function(socket1, socket2) {
+	if (socket1 !== socket2 && !socket1.paired && !socket2.paired) {
 		var gameId = 'game' + gameIndex;
 		gameIndex++;
 
-		socket.paired = true;
-		unpairedSocket.paired = true;
-		socket.gameId = gameId;
-		unpairedSocket.gameId = gameId;
-		socket.join(gameId);
-		unpairedSocket.join(gameId);
-		needsPair = false;
+		socket1.paired = true;
+		socket2.paired = true;
+		socket1.gameId = gameId;
+		socket2.gameId = gameId;
+		socket1.join(gameId);
+		socket2.join(gameId);
+
+		delete unpairedPins[socket1.pin];
+		delete unpairedPins[socket2.pin];
+		delete socket1.pin;
+		delete socket2.pin;
+
+		var firstTurn = Math.floor(Math.random() * 2);
 
 		games[gameId] = {
 			'players':[
-				{'socket': unpairedSocket, 'id': unpairedSocket.id},
-				{'socket': socket, 'id': socket.id}
+				{'socket': socket1, 'id': socket1.id},
+				{'socket': socket2, 'id': socket2.id}
 			],
-			'turn': 0,
+			'turn': firstTurn,
 			'filled': []
 		};
 
-		io.to(socket.gameId).emit('matched');
-		io.to(unpairedSocket.id).emit('start-game');
-	} else {
-		socket.paired = false;
-		unpairedSocket = socket;
-		needsPair = true;
+		io.to(socket1.id).emit('start-game', firstTurn);
+		io.to(socket2.id).emit('start-game', 1 - firstTurn);
 	}
 };
 
@@ -103,6 +116,19 @@ var isFinished = function(filled) {
 	}
 
 	return filledCount >= 9;
+};
+
+var generatePin = function() {
+	if (2 * pinCount > maxPin) {
+		maxPin *= 2;
+	}
+
+	var pin;
+	do {
+		pin = Math.floor(Math.random() * maxPin);
+	} while (typeof unpairedPins[pin] !== 'undefined');
+
+	return pin;
 };
 
 var SERVER_PORT = process.env.OPENSHIFT_NODEJS_PORT || 8080,
