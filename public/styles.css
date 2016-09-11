@@ -22,7 +22,11 @@ body {
     clear: both;
 }
 
-@media (min-device-width: 800px) {
+#fork {
+    display: none;
+}
+
+@media (min-width: 800px) {
     #fork {
         display: block !important;
     }
