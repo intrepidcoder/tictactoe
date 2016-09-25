@@ -22,6 +22,10 @@ io.on('connection', function(socket) {
 			games[socket.gameId].players[1].socket.paired = false;
 			delete games[socket.gameId];
 			delete socket.gameId;
+		} else {
+			delete unpairedPins[socket.pin];
+			delete socket.pin;
+			pinCount--;
 		}
 	});
 
@@ -85,6 +89,8 @@ var pairPlayers = function(socket1, socket2) {
 		delete socket1.pin;
 		delete socket2.pin;
 
+		pinCount -= 2;
+
 		var firstTurn = Math.floor(Math.random() * 2);
 
 		games[gameId] = {
@@ -124,6 +130,7 @@ var generatePin = function() {
 	}
 
 	var pin;
+
 	do {
 		pin = Math.floor(Math.random() * maxPin);
 	} while (typeof unpairedPins[pin] !== 'undefined');
